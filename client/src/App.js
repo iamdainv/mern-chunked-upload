@@ -2,7 +2,7 @@ import {useState, useEffect} from "react";
 import axios from "axios";
 import './App.css';
 
-const chunkSize = 10 * 1024;
+const chunkSize = 7 * 1024 * 1024;
 
 function App() {
 
@@ -11,6 +11,7 @@ function App() {
   const [currentFileIndex, setCurrentFileIndex] = useState(null);
   const [lastUploadedFileIndex, setLastUploadedFileIndex] = useState(null);
   const [currentChunkIndex, setCurrentChunkIndex] = useState(null);
+  console.log("🚀 ~ App ~ currentChunkIndex:", currentChunkIndex)
 
   function handleDrop(e) {
     e.preventDefault();
@@ -20,6 +21,7 @@ function App() {
   function readAndUploadCurrentChunk() {
     const reader = new FileReader();
     const file = files[currentFileIndex];
+
     if (!file) {
       return;
     }
@@ -33,6 +35,7 @@ function App() {
   function uploadChunk(readerEvent) {
     const file = files[currentFileIndex];
     const data = readerEvent.target.result;
+    console.log("🚀 ~ uploadChunk ~ data:", data)
     const params = new URLSearchParams();
     params.set('name', file.name);
     params.set('size', file.size);
@@ -111,8 +114,8 @@ function App() {
             }
           }
           return (
-            <a className="file" target="_blank"
-               href={'http://localhost:4001/uploads/'+file.finalFilename}>
+            <a className="file"
+               href={'http://localhost:4001/uploads/'+file.finalFilename} download>
               <div className="name">{file.name}</div>
               <div className={"progress " + (progress === 100 ? 'done' : '')}
                    style={{width:progress+'%'}}>{progress}%</div>

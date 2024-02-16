@@ -5,7 +5,7 @@ import fs from "fs";
 import md5 from "md5";
 
 const app = express();
-app.use(bodyParser.raw({type:'application/octet-stream', limit:'100mb'}));
+app.use(bodyParser.raw({type:'application/octet-stream', limit:'10mb'}));
 app.use(cors({
   origin: 'http://localhost:3000',
 }));
@@ -26,6 +26,7 @@ app.post('/upload', (req, res) => {
   if (lastChunk) {
     const finalFilename = md5(Date.now()).substr(0, 6) + '.' + ext;
     fs.renameSync('./uploads/'+tmpFilename, './uploads/'+finalFilename);
+    // After upload file successfully, can be upload to S3 instead
     res.json({finalFilename});
   } else {
     res.json('ok');
